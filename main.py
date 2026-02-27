@@ -60,17 +60,15 @@ logging.basicConfig(level=logging.WARNING)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "👋 <b>Welcome to the Numerology Reader!</b>\n\n"
-        "Get your Chinese zodiac sign + 3 core numerology numbers in seconds.\n\n"
-        "📅 Type: <code>/read YYYY-MM-DD</code>\n"
-        "Example: <code>/read 1995-03-22</code>",
+        "👋 <b>Welcome to the AstroDegen!</b>\n\n"
+        "Wanna get a reading? Use the /readme command.\n\n",
         parse_mode='HTML'
     )
 
 async def read(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not context.args:
         await update.message.reply_text(
-            "❌ Please provide a date.\n\nUsage: <code>/read YYYY-MM-DD</code>\nExample: <code>/read 1990-07-15</code>",
+            "Dude... I don't read minds. Give me a date.\nExample: <code>/readme 1990-07-15</code>",
             parse_mode='HTML'
         )
         return
@@ -79,7 +77,7 @@ async def read(update: Update, context: ContextTypes.DEFAULT_TYPE):
         date = datetime.strptime(context.args[0], '%Y-%m-%d')
     except ValueError:
         await update.message.reply_text(
-            "❌ Invalid format. Use: <code>/read YYYY-MM-DD</code>",
+            "Use the correct format: YYYY-MM-DD\n\nExample: <code>/readme 1990-07-15</code>",
             parse_mode='HTML'
         )
         return
@@ -87,25 +85,49 @@ async def read(update: Update, context: ContextTypes.DEFAULT_TYPE):
     sign = get_zodiac(date)
     sum_all, daynr, doy = main_numbers(date)
 
-    reply = (
-        f"📅 <b>Reading for {date.strftime('%Y-%m-%d')}</b>\n"
-        f"━━━━━━━━━━━━━━━━━━━━\n\n"
-        f"🐾 <b>Chinese Zodiac: {sign}</b>\n"
-        f"{data.Animal.get(sign, '')}\n\n"
-        f"━━━━━━━━━━━━━━━━━━━━\n\n"
-        f"🔢 <b>FULL DATE NUMBER — {sum_all}</b>\n"
+    """reply = (
+        f"<b>Chinese Zodiac sign — {sign}</b>\n\n"
+        f"{data.Animal.get(sign, '')}\n\n\n\n"
+        f"<b>FULL DATE NUMBER — {sum_all}</b>\n"
         f"{data.Number_short.get(str(sum_all), '—')}\n\n"
-        f"📆 <b>DAY NUMBER — {daynr}</b>\n"
+        f"<b>DAY NUMBER — {daynr}</b>\n"
         f"{data.Number_short.get(str(daynr), '—')}\n\n"
-        f"🗓️ <b>DAY OF THE YEAR — {doy}</b>\n"
+        f"<b>DAY OF THE YEAR — {doy}</b>\n"
         f"{data.Number_short.get(str(doy), '—')}\n\n"
     )
 
-    await update.message.reply_text(reply, parse_mode='HTML')
+    await update.message.reply_text(reply, parse_mode='HTML')"""
+    # Group labels by their final number value
+    number_labels = {
+        sum_all: [],
+        daynr: [],
+        doy: []
+    }
+    number_labels[sum_all].append("FULL DATE NUMBER")
+    number_labels[daynr].append("DAY NUMBER")
+    number_labels[doy].append("DAY OF THE YEAR")
 
+    reply = (
+        f"<b>Chinese Zodiac sign — {sign}</b>\n\n"
+        f"{data.Animal.get(sign, '')}\n\n\n\n"
+    )
+
+    seen = set()
+    for label_key in [sum_all, daynr, doy]:
+        if label_key in seen:
+            continue
+        seen.add(label_key)
+        labels = number_labels[label_key]
+        merged_label = " & ".join(labels)
+        reply += (
+            f"<b>{merged_label} — {label_key}</b>\n"
+            f"{data.Number_short.get(str(label_key), '—')}\n\n"
+        )
+
+    await update.message.reply_text(reply, parse_mode='HTML')
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "❓ Use <code>/read YYYY-MM-DD</code> to get your reading.\nExample: <code>/read 1990-07-15</code>",
+        "All I would do to you is a reading. Use the /readme command.",
         parse_mode='HTML'
     )
 
