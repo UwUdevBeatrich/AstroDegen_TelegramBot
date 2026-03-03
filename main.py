@@ -85,18 +85,7 @@ async def read(update: Update, context: ContextTypes.DEFAULT_TYPE):
     sign = get_zodiac(date)
     sum_all, daynr, doy = main_numbers(date)
 
-    """reply = (
-        f"<b>Chinese Zodiac sign — {sign}</b>\n\n"
-        f"{data.Animal.get(sign, '')}\n\n\n\n"
-        f"<b>FULL DATE NUMBER — {sum_all}</b>\n"
-        f"{data.Number_short.get(str(sum_all), '—')}\n\n"
-        f"<b>DAY NUMBER — {daynr}</b>\n"
-        f"{data.Number_short.get(str(daynr), '—')}\n\n"
-        f"<b>DAY OF THE YEAR — {doy}</b>\n"
-        f"{data.Number_short.get(str(doy), '—')}\n\n"
-    )
 
-    await update.message.reply_text(reply, parse_mode='HTML')"""
     # Group labels by their final number value
     number_labels = {
         sum_all: [],
