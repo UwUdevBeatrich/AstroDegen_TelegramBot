@@ -97,8 +97,10 @@ async def read(update: Update, context: ContextTypes.DEFAULT_TYPE):
     number_labels[doy].append("DAY OF THE YEAR")
 
     reply = (
-        f"<b>Chinese Zodiac sign — {sign}</b>\n\n"
-        f"{data.Animal.get(sign, '')}\n\n\n\n"
+        f"<b>• A S T R O L O G Y •</b>\n\n"
+        f"<b>Chinese Zodiac sign — {sign}</b>\n"
+        f"{data.Animal.get(sign, '')}\n\n\n"
+        f"<b>• N U M E R O L O G Y •</b>\n\n"
     )
 
     seen = set()
